@@ -15,6 +15,12 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
+
+;; show the itme
+(setq display-time-day-and-date t
+                display-time-24hr-format t)
+(display-time)
+
 ;; Load path etc.
 
 (setq dotfiles-dir (file-name-directory
@@ -76,26 +82,19 @@
   (mapc #'load (directory-files user-specific-dir nil ".*el$")))
 (if (file-exists-p user-specific-config) (load user-specific-config))
 
-;;===== PyFlakes
-;; code checking via pyflakes+flymake
-(when (load "flymake" t)
- (defun flymake-pyflakes-init ()
- (let* ((temp-file (flymake-init-create-temp-buffer-copy
- 'flymake-create-temp-inplace))
- (local-file (file-relative-name
- temp-file
- (file-name-directory buffer-file-name))))
- (list "pyflakes" (list local-file))))
- 
- (add-to-list 'flymake-allowed-file-name-masks
- '("\\.py\\'" flymake-pyflakes-init)))
- 
-(add-hook 'find-file-hook 'flymake-find-file-hook)
 ;; ==== color theme
 (add-to-list 'load-path "/path/to/color-theme.el/file")
 (require 'color-theme)
 (eval-after-load "color-theme"
   '(progn
      (color-theme-initialize)
-     (color-theme-robin-hood)))
+     (color-theme-billw)))
+
+;;; loading jade mode
+(add-to-list 'load-path "~/.emacs.d/vendor/jade-mode")
+(require 'sws-mode)
+(require 'jade-mode)    
+(add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
+(add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
+
 ;;; init.el ends here
